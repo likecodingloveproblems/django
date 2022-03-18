@@ -2316,6 +2316,7 @@ class SchemaTests(TransactionTestCase):
                 TagUniqueRename._meta.db_table = "unique-table"
                 # This fails if the unique index name isn't quoted.
                 editor.alter_unique_together(TagUniqueRename, [], (("title", "slug2"),))
+                editor.delete_model(TagUniqueRename)
         finally:
             TagUniqueRename._meta.db_table = old_table_name
 
@@ -2445,6 +2446,7 @@ class SchemaTests(TransactionTestCase):
         with connection.schema_editor() as editor:
             AuthorWithUniqueName._meta.constraints = []
             editor.remove_constraint(AuthorWithUniqueName, constraint)
+            editor.delete_model(AuthorWithUniqueName)
 
     def test_unique_together(self):
         """
@@ -2586,6 +2588,7 @@ class SchemaTests(TransactionTestCase):
         with connection.schema_editor() as editor:
             AuthorWithUniqueNameAndBirthday._meta.constraints = []
             editor.remove_constraint(AuthorWithUniqueNameAndBirthday, constraint)
+            editor.delete_model(AuthorWithUniqueNameAndBirthday)
 
     def test_unique_constraint(self):
         with connection.schema_editor() as editor:
@@ -2982,6 +2985,7 @@ class SchemaTests(TransactionTestCase):
         with connection.schema_editor() as editor:
             AuthorWithIndexedNameAndBirthday._meta.indexes = []
             editor.remove_index(AuthorWithIndexedNameAndBirthday, index)
+            editor.delete_model(AuthorWithIndexedNameAndBirthday)
 
     @isolate_apps("schema")
     def test_db_table(self):
@@ -3097,6 +3101,8 @@ class SchemaTests(TransactionTestCase):
                 editor.remove_index(AuthorWithIndexedName, index)
         finally:
             AuthorWithIndexedName._meta.indexes = []
+        with connection.schema_editor() as editor:
+            editor.delete_model(AuthorWithIndexedName)
 
     def test_order_index(self):
         """
@@ -3656,6 +3662,9 @@ class SchemaTests(TransactionTestCase):
             )
         else:
             self.assertForeignKeyExists(Book, "author_id", "table_author_double_quoted")
+        with connection.schema_editor() as editor:
+            editor.delete_model(Author)
+            editor.delete_model(Book)
 
     def test_add_foreign_object(self):
         with connection.schema_editor() as editor:
@@ -3667,6 +3676,8 @@ class SchemaTests(TransactionTestCase):
         new_field.set_attributes_from_name("author")
         with connection.schema_editor() as editor:
             editor.add_field(BookForeignObj, new_field)
+            editor.delete_model(BookForeignObj)
+
 
     def test_creation_deletion_reserved_names(self):
         """
