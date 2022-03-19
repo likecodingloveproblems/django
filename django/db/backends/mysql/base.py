@@ -130,7 +130,7 @@ class DatabaseWrapper(BaseDatabaseWrapper):
         "SmallIntegerField": "smallint",
         "TextField": "longtext",
         "TimeField": "time(6)",
-        "UUIDField": "char(32)",
+        "UUIDField": "uuid",
     }
 
     # For these data types:

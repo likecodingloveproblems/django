@@ -5,6 +5,7 @@ from django.utils.functional import cached_property
 
 
 class DatabaseFeatures(BaseDatabaseFeatures):
+    has_native_uuid_field = True
     empty_fetchmany_value = ()
     allows_group_by_pk = True
     related_fields_match_type = True
